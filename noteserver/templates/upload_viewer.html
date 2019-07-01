@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div id="imgs"></div>
+
+{% for image in files %}
+
+    <div class="thumbnail_selector"><img class="thumbnail" src="{{image}}" >
+    </div>
+{% endfor %}
+
+{% endblock %}
+{% block footer %}
+<script>
+var option = 'enlarge';
+$(".thumbnail_selector").click(function(){
+
+if (option == 'nothing'){
+$(this).hide();
+}
+
+if (option == 'enlarge'){
+$.post($(this).attr('src'));
+
+// $.post("viewer.html",{source : $(this).src});
+}
+
+});
+
+</script>
+
+{% endblock %}
+
+</html>
