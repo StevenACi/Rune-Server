@@ -3,8 +3,8 @@ from utilities import f_storage as fs
 from flask import (Flask, request, session, redirect, url_for, abort, render_template, flash)
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__) # create app instance
-app.config.from_object(__name__) # load config from this file (flaskr.py)
+app = Flask(__name__)  # create app instance
+app.config.from_object(__name__)  # load config from this file (flaskr.py)
 
 # load default config and override config from an environment variable
 app.config.update(
@@ -15,7 +15,7 @@ app.config.update(
 )
 
 UPLOAD_FOLDER = 'D:/Codes/Python codes/Note-Server/noteserver/static/uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'gif'])
 
 # os.chdir('E:/Codes/Python codes/Note-Server/noteserver')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -106,9 +106,9 @@ def upload():
 @app.route('/upload_menu', methods=['GET', 'POST'])
 def upload_menu():
     if request.method == 'POST':
-        print("Reached here")
+
         session['utype'] = request.form['utype']
-        print("Reached here")
+
         return redirect(url_for('upload'))
 
     return render_template('uploadmenu.html')
