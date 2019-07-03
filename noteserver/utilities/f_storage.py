@@ -11,17 +11,17 @@ def gather_images(target_dir):
     global currentPath
     global files
     global currentPath_index
-    for img in glob.glob('D:/Codes/Python codes/Note-Server/noteserver/' + target_dir + '/*.jpg'):
+    for img in glob.glob(os.getcwd() + target_dir + '*.jpg'):
         img = os.path.basename(img)
         files.append(img)
-    for img in glob.glob('D:/Codes/Python codes/Note-Server/noteserver/' + target_dir + '/*.png'):
+    for img in glob.glob(os.getcwd() + target_dir + '*.png'):
         img = os.path.basename(img)
         files.append(img)
     for img in glob.glob("*.bmp"):
         img = os.path.basename(img)
         files.append(img)
 
-    for img in glob.glob('D:/Codes/Python codes/Note-Server/noteserver/' + target_dir + '*.gif'):
+    for img in glob.glob(os.getcwd() + target_dir + '*.gif'):
         img = os.path.basename(img)
         files.append(img)
 

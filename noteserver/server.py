@@ -14,10 +14,13 @@ app.config.update(
     PASSWORD='fin'
 )
 
-UPLOAD_FOLDER = 'D:/Codes/Python codes/Note-Server/noteserver/static/uploads'
+
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'gif'])
 
-# os.chdir('E:/Codes/Python codes/Note-Server/noteserver')
+UPLOAD_FOLDER = os.getcwd()
+
+UPLOAD_FOLDER += '/static/uploads'
+
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #
