@@ -49,5 +49,6 @@ def isvalidfile(length, filename, ftype):
     if (ext == 'txt') or (ext == 'pdf'):
         if ftype == "text":
             return True
-
+    if ftype == "video":
+        return True
     return False
