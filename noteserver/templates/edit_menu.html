@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+{{response}}
+
+{{thumb}}
+
+    <form method=post enctype=multipart/form-data>
+      <input type=radio name=confirm value="delete">delete<br>
+        <input type=radio name=confirm value="rename">rename  <input type=text name=rename><br>
+        <input type=radio name=confirm value="duplicate">duplicate<br>
+
+
+        <input class="blkbutton" type=submit name=uri value="{{uri}}"><br>
+
+    </form>
+
+<div class="imgcontain">
+
+    <img src="{{uri}}">
+
+</div>
+
+{% endblock %}
+
+{% block footer %}
+<script>
+var option = 'enlarge';
+$(".thumbnail_selector").click(function(){
+
+if (option == 'nothing'){
+$(this).hide();
+}
+
+if (option == 'enlarge'){
+$.post($(this).attr('src'));
+
+// $.post("viewer.html",{source : $(this).src});
+}
+
+});
+
+</script>
+
+{% endblock %}
+
+</html>

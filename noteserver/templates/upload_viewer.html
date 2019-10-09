@@ -3,13 +3,26 @@
 {% block content %}
 <div id="imgs"></div>
 
-{% for image in files %}
 
+<form method=post enctype=multipart/form-data>
+{% for image in files %}
+    <button name="thumb" type="submit" value="{{image}}">
     <div class="thumbnail_selector"><img class="thumbnail" src="{{image}}" >
     </div>
+    </button>
+{% endfor %}
+
+ </form>
+
+{% for image in files%}
+    <div> {{image}}
+    </div>
+
 {% endfor %}
 
 {% endblock %}
+
+
 {% block footer %}
 <script>
 var option = 'enlarge';

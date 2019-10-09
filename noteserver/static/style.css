@@ -2,6 +2,11 @@ body {
 color:blue;
 }
 
+.blkbutton{
+color:blue;
+background-color:blue;
+}
+
 .thumbnail {
 width:10%;
 height:auto;

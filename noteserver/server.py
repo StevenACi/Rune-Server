@@ -8,16 +8,16 @@ app.config.from_object(__name__)  # load config from this file (flaskr.py)
 
 # load default config and override config from an environment variable
 app.config.update(
-   # DATABASE=os.path.join(app.root_path, 'flaskr.db'),
-    SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
-    USERNAME='ino',
-    PASSWORD='fin'
+	# DATABASE=os.path.join(app.root_path, 'flaskr.db'),
+	SECRET_KEY=b'_5#y2L"F4Q8z\n\xec]/',
+	USERNAME='ino',
+	PASSWORD='fin'
 )
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'gif'])
 
-UPLOAD_FOLDER = os.getcwd()
+UPLOAD_FOLDER, MAIN_FOLDER = os.getcwd(), os.getcwd()
 
 UPLOAD_FOLDER += '/static/uploads'
 
@@ -28,12 +28,15 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 #
 uploadedfile = ""
 uploadtype = ""
+# temp globals
+delete = 'none'
+
 
 
 # validate files
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+	return '.' in filename and \
+				 filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 """ERROR HANDLER, MOVE LATER"""
@@ -41,8 +44,8 @@ def allowed_file(filename):
 
 @app.errorhandler(403)
 def page_not_found(e):
-    # note that we set the 403 status explicitly
-    return render_template('403.html'), 403
+	# note that we set the 403 status explicitly
+	return render_template('403.html'), 403
 
 
 """VIEW FUNCTIONS"""
@@ -51,128 +54,186 @@ def page_not_found(e):
 @app.route('/', methods=['GET', 'POST'])
 def main_menu():
 
-    # go to the functions for these pages
-    if request.method == 'POST':
+	# go to the functions for these pages
+	if request.method == 'POST':
 
-        if request.form['uo'] == "upload_menu":
-            return redirect(url_for('upload_menu'))
+		if request.form['uo'] == "upload_menu":
+			return redirect(url_for('upload_menu'))
 
-            # return render_template('upload.html', type="image")
+		# return render_template('upload.html', type="image")
 
-        if request.form['uo'] == "view_uploads":
-            return redirect(url_for("upload_viewer"))
-    #
-    return render_template('main_menu.html', user=app.config['USERNAME'])
+		if request.form['uo'] == "view_uploads":
+			return redirect(url_for("upload_viewer"))
+
+		if request.form['uo'] == "delete_menu":
+			return redirect(url_for("upload_viewer"))
+	#
+	return render_template('main_menu.html', user=app.config['USERNAME'])
 
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    error = ""
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file')
-            return redirect(request.url)
-        file = request.files['file']
+	error = ""
+	if request.method == 'POST':
+		if 'file' not in request.files:
+			flash('No file')
+			return redirect(request.url)
+		file = request.files['file']
 
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
+		if file.filename == '':
+			flash('No selected file')
+			return redirect(request.url)
 
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filename = "/" + filename
+		if file and allowed_file(file.filename):
+			filename = secure_filename(file.filename)
+			filename = "/" + filename
 
-            # get correct path for type of file
-            # get length of file to parse extension
-            # check the ext
-            if fs.isvalidfile(len(filename), filename, session['utype']):
+			# get correct path for type of file
+			# get length of file to parse extension
+			# check the ext
+			if fs.isvalidfile(len(filename), filename, session['utype']):
 
-                path = os.path.join(app.config['UPLOAD_FOLDER'] + filename)
-                print("path: ", path)
-                file.save(path)
-                print(file)
-                print(filename)
+				path = os.path.join(app.config['UPLOAD_FOLDER'] + filename)
+				print("path: ", path)
+				file.save(path)
+				print(file)
+				print(filename)
 
-                global uploadedfile
-                uploadedfile = filename
-                # thank you screen
-                return redirect(url_for('uploaded_file'))
-            else:
-                print(session['utype'])
-                error = "invalid file type"
+				global uploadedfile
+				uploadedfile = filename
+				# thank you screen
+				return redirect(url_for('uploaded_file'))
+			else:
+				print(session['utype'])
+				error = "invalid file type"
 
-                # upload_menu()
+			# upload_menu()
 
-    return render_template('upload.html', error=error)
+	return render_template('upload.html', error=error)
 
 
 @app.route('/upload_menu', methods=['GET', 'POST'])
 def upload_menu():
-    if request.method == 'POST':
+	if request.method == 'POST':
 
-        session['utype'] = request.form['utype']
+		session['utype'] = request.form['utype']
 
-        return redirect(url_for('upload'))
+		return redirect(url_for('upload'))
 
-    return render_template('uploadmenu.html')
+	return render_template('upload_menu.html')
 
 
 # thank you screen
 @app.route('/uploaded')
 def uploaded_file():
-    global uploadedfile
-    print("Uploaded file: ", uploadedfile)
-    imgURL = "/static/uploads" + uploadedfile
-    return render_template('uploaded.html', image=imgURL)
+	global uploadedfile
+	print("Uploaded file: ", uploadedfile)
+	imgURL = "/static/uploads" + uploadedfile
+	return render_template('uploaded.html', image=imgURL)
 
 
-@app.route('/upload_viewer', methods=['GET', 'POST'])
+@app.route('/upload_viewer', methods=['GET'])
 def upload_viewer():
-    files = fs.gather_images('/static/uploads/')
-    return render_template('upload_viewer.html', user=app.config['USERNAME'], files=files)
+	global files
+	files = fs.gather_images('/static/uploads/')
+	"""
+	if request.form['thumb']:
+			print('thumb')
+			uri = str(request.form['thumb'])
+			delete_menu(uri)
+	"""
+	return render_template('upload_viewer.html', user=app.config['USERNAME'], files=files)
 
 
-#######################################unused##################################################################
+@app.route('/upload_viewer', methods=['POST'])
+def upload_viewer_post():
+	global delete
+	print('thumb', str(request.form['thumb']))
+	uri = request.form['thumb']
+	delete = uri
+	return redirect(url_for('edit_menu_init'))
+
+
+@app.route('/edit_menu/', methods=['GET'])
+def edit_menu_init():
+	global delete
+	response = 'Choose what to do?\n'
+	return render_template('edit_menu.html', user=app.config['USERNAME'], uri=delete, response=response)
+
+
+@app.route('/edit_menu/', methods=['POST'])
+def edit_menu():
+	global files
+	uri = request.form['uri']
+	print('ur', uri)
+
+	response = 'Choose what to do with file?\n'
+
+	if request.form['confirm'] == "delete":
+		response = delete_entry(uri)
+
+	if request.form['confirm'] == "rename":
+		rename = request.form['rename']
+		response = rename_entry(uri, rename)
+
+	return render_template('edit_menu.html', user=app.config['USERNAME'], uri=uri, response=response)
+
+
+def delete_entry(uri):
+	os.remove(MAIN_FOLDER + uri)
+	return uri + ' deleted!'
+
+
+def rename_entry(uri, rename):
+	src = MAIN_FOLDER + uri
+	length = len(uri)
+	ext = uri[length - 4:]
+	dest = 'static/uploads/' + rename + ext
+	os.rename(src, dest)
+	return uri + ' renamed! (' + rename + ext + ')'
+
+
+#         unused #
 
 
 @app.route('/add', methods=['POST'])
 def add_entry():
-    if not session.get('logged_in'):
-        abort(401)
-    db = get_db()
+	if not session.get('logged_in'):
+		abort(401)
+	db = get_db()
 
-    chars = ['<', '>', '%', '$', '&', '#']
+	chars = ['<', '>', '%', '$', '&', '#']
 
-    if any((c in chars) for c in request.form['title']):
-        abort(403)
-    if any((c in chars) for c in request.form['text']):
-        abort(403)
+	if any((c in chars) for c in request.form['title']):
+		abort(403)
+	if any((c in chars) for c in request.form['text']):
+		abort(403)
 
-    db.execute('insert into entries (title, text) values (?,?)',
-               [request.form['title'], request.form['text']])
-    db.commit()
-    flash('New entry was successfully posted')
-    return redirect(url_for('show_entries'))
-    # return redirect("http://www.infowars.com")
+	db.execute('insert into entries (title, text) values (?,?)',
+						 [request.form['title'], request.form['text']])
+	db.commit()
+	flash('New entry was successfully posted')
+	return redirect(url_for('show_entries'))
+# return redirect("http://www.infowars.com")
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    error = None
-    if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
-        else:
-            session['logged_in'] = True
-            flash('You were logged in')
-            return redirect(url_for('main_menu'))
-    return render_template('login.html', error=error)
+	error = None
+	if request.method == 'POST':
+		if request.form['username'] != app.config['USERNAME']:
+			error = 'Invalid username'
+		elif request.form['password'] != app.config['PASSWORD']:
+			error = 'Invalid password'
+		else:
+			session['logged_in'] = True
+			flash('You were logged in')
+			return redirect(url_for('main_menu'))
+	return render_template('login.html', error=error)
 
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)
-    flash('You were logged out')
-    return redirect(url_for('upload_viewer'))
+	session.pop('logged_in', None)
+	flash('You were logged out')
+	return redirect(url_for('upload_viewer'))
