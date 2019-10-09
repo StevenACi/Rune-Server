@@ -15,9 +15,7 @@ with a focus on being cozy and homely.
 4. run command "set FLASK_APP=server.py"
 5. run command "flask run --host=0.0.0.0"
 
-This 'host=0.0.0.0' exposes your server to the network!
-Your router should block port 5000 by default, allowing you to use your server
-safely on your home network.! 
+This 'host=0.0.0.0' exposes your server to the network, so remember to block port 5000 on your router
 
 Enjoy limitless file transfers :)!
 
