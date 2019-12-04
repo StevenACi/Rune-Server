@@ -19,4 +19,5 @@ This 'host=0.0.0.0' exposes your server to the network, so remember to block por
 
 Enjoy limitless file transfers :)!
 
-
+![Image2](https://cdn.discordapp.com/attachments/533758714805616680/651606553430065227/unknown.png)
+![Image1](https://cdn.discordapp.com/attachments/533758714805616680/651606345455501332/unknown.png)
