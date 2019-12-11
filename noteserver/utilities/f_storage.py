@@ -11,6 +11,8 @@ def gather_images(target_dir):
     global currentPath
     global files
     global currentPath_index
+
+    files = []
     for img in glob.glob(os.getcwd() + target_dir + '*.jpg'):
         img = os.path.basename(img)
         files.append(img)
@@ -25,7 +27,8 @@ def gather_images(target_dir):
         img = os.path.basename(img)
         files.append(img)
 
-    currentPath = files[0]
+    if files:
+        currentPath = files[0]
     currentPath_index = 0
 
     cc_files = []

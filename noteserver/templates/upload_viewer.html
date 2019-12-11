@@ -13,14 +13,16 @@
 {% block footer %}
 <script>
 var option = 'enlarge';
-$(".thumbnail_selector").click(function(){
+$(".thumbnail").click(function(){
 
-if (option == 'nothing'){
-$(this).hide();
-}
-
-if (option == 'enlarge'){
-$.post($(this).attr('src'));
+if (option === 'enlarge'){
+//$.post($(this).attr('src'));
+    if($(this).width === 'auto'){
+        $(this).width('10%');
+    } else {
+        $(this).height('auto');
+        $(this).width('auto');
+    }
 
 // $.post("viewer.html",{source : $(this).src});
 }

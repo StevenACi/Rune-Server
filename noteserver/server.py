@@ -128,11 +128,12 @@ def uploaded_file():
 
 @app.route('/upload_viewer', methods=['GET', 'POST'])
 def upload_viewer():
-    files = fs.gather_images('/static/uploads/')
-    return render_template('upload_viewer.html', user=app.config['USERNAME'], files=files)
+    if request.method == 'GET':
+        files = fs.gather_images('/static/uploads/')
+        return render_template('upload_viewer.html', user=app.config['USERNAME'], files=files)
 
 
-#######################################unused##################################################################
+###################################### # unused # #################################################################
 
 
 @app.route('/add', methods=['POST'])
