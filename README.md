@@ -3,7 +3,7 @@
 
 <b>Limitless FTP server,</b>
 
-with a focus on being cozy and homely.
+for home users.
 
 <h4>SETUP:<h4>
 
